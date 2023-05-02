@@ -1,3 +1,10 @@
+<script>
+  window.addEventListener('unload', function() {
+    // alert('Are you sure??'); // Optional alert message
+    window.location.href = "http://127.0.0.1/assignment1/index.php/Quiz_controller/index";
+});
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +31,7 @@
         .incorrect { color: red; 
           font-weight: bold;}
     </style>
-    <title>LOCALSTORAGE</title>
+    <title>TESTING LOCALSTORAGE</title>
 </head>
 <body style="background-color: #800080;">
 
@@ -95,7 +102,7 @@
         </form>
 
         <!-- modal  -->
-        <div id ="conformation-modal" class="modal" tabindex="-1" role="dialog">
+        <div id ="conformation-modal" class="modal" tabindex="-1" role="dialog" data-backdrop="static"  data-keyboard="false">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -140,22 +147,29 @@
 
 
 <script>
+  
   $("#exit_quiz").hide();
   $("#preview-status").hide();
   var quiz_id = 1;
   var total_quiz = 10;
+  var total_time_per_quiz = 15;
   var timer_array = new Array(10).fill(0);
   var answers_selected = Array(10);
   var question = new Array(10).fill(0);
+  var active_status =1;
+
   var intervalID;
   var time;
+  var time_taken;
   var startPreview = false;
   var correct_questions=0;
   var attempted_questions=0;
 
 
+  
 
   $(document).ready(function() {
+    // stack_operation();
     $("#result_table").hide();
     $("#quiz_form").show();
     // // // $('#conformation-modal').modal('show');     
@@ -165,46 +179,43 @@
 
   $(document).on("click", "#next", function(e) {
     e.preventDefault();
-    console.log(quiz_id);
+    console.log("clicked next from "+quiz_id);
     if(!startPreview){
-      timer_array[quiz_id-1] = time;
-      clearInterval(intervalID);
-      console.log(timer_array);
-
-      save_clicked_radiobutton();
 
       if(quiz_id > total_quiz-1){
-        $('#conformation-modal').modal('show'); 
+        timer_array[quiz_id-1] = time;
+        clearInterval(intervalID);
+        console.log(timer_array);
 
-        // $("#quiz_form").hide();
-        // alert("Quiz completed");
+        save_clicked_radiobutton();
+        submitBtn();
+        $('#conformation-modal').modal('show'); 
+        quiz_result();
 
         $(document).on("click", "#preview_button", function(e) {
           $('#conformation-modal').modal('hide');
           $("#quiz_form").hide();
           $("#preview-status").show();
-          // alert("preview button");
+          // alert("preview button");       
+
           preview();
           $('#conformation-modal').modal('hide');
 
-
         });
         $(document).on("click", "#result_button", function(e) {
-          // $('#conformation-modal').modal('hide');
           $("#quiz_form").hide();
-
-          // alert("result  button");
           $('#conformation-modal').modal('hide');
-
-          quiz_result();
-          // $('#conformation-modal').modal('hide');
-
+   
+          show_result();
         });
-        
-        // preview();
-        // quiz_result();
         return;
       }
+      timer_array[quiz_id-1] = time;
+      clearInterval(intervalID);
+      console.log(timer_array);
+
+      save_clicked_radiobutton();
+      submitBtn();
       quiz_id++;
       if (question[quiz_id-1] == 0){
         set_modal_data();
@@ -218,7 +229,8 @@
       if(quiz_id > total_quiz-1){
           $("#quiz_form").hide();
           // alert("Get to Quiz result");
-          quiz_result();
+          // quiz_result();
+          show_result();
         }
         if(quiz_id > total_quiz){
           return;
@@ -232,31 +244,20 @@
 
 
   $(document).on("click", "#previous", function(e) {
-    console.log(quiz_id);
+    console.log("clicked previous from "+quiz_id);
     e.preventDefault();
 
     if(!startPreview){
       console.log("no preview "+ quiz_id);
+      timer_array[quiz_id-1] = time;
+      clearInterval(intervalID);
+      console.log(timer_array);
 
-      if(quiz_id <= 1){
-        timer_array[quiz_id-1] = time;
-        clearInterval(intervalID);
-        console.log(timer_array);
+      save_clicked_radiobutton();
 
-        save_clicked_radiobutton();
-        return;
-      }
-      else if(quiz_id > 1){
-        timer_array[quiz_id-1] = time;
-        clearInterval(intervalID);
-        console.log(timer_array);
-
-        save_clicked_radiobutton();
-        quiz_id--;
-        load_previous();
-        return;
-      }
-      return;      
+      quiz_id--;
+      backTrack();
+      return;   
     }
     else{
       console.log("preview "+ quiz_id);
@@ -290,7 +291,7 @@
             //retrive data from localstorage
             const questionObj = JSON.parse(localStorage.getItem("item"+quiz_id));
             // 
-            document.getElementById("question-number").innerHTML= questionObj.id;
+            document.getElementById("question-number").innerHTML=  questionObj.id + " out of "+ total_quiz;
 
             $('#question-text').html(questionObj.question);
             question[quiz_id-1] = questionObj.question;
@@ -311,7 +312,7 @@
     set_timer();
     const questionObj = JSON.parse(localStorage.getItem("item"+quiz_id));
     // console.log(questionObj);
-    document.getElementById("question-number").innerHTML= questionObj.id;
+    document.getElementById("question-number").innerHTML= questionObj.id + " out of "+ total_quiz;
     console.log("question object");
 
     $('#question-text').html(questionObj.question);
@@ -328,21 +329,22 @@
     });
   }
 
-  function previousBtn(){
-    if(quiz_id <= 1){
-      console.log('12222222');
-      if(!$('#previous').hasClass('d-none'))
-      {
-        $('#previous').addClass('d-none');
-      }
-    }
-    else{
-      if($('#previous').hasClass('d-none'))
-      {
-        $('#previous').removeClass('d-none');
-      }
-    }
+  function backTrack() {
+    console.log("Backtracking Function initiated");
+    console.log("time consumed = "+timer_array[quiz_id-1]+ " by quiz id " + quiz_id);
 
+    for (let i = quiz_id; i >= 1; i--) {
+      console.log("For loop itiration i-" +i);
+      if (timer_array[i - 1] < total_time_per_quiz) {
+        quiz_id = i;
+        console.log("quiz id found-"+quiz_id+ "value of i-" +i);
+        load_previous();
+        return;
+      }
+    }
+    --quiz_id;
+    document.getElementById('next').click();
+    return;
   }
 
   function set_timer() {
@@ -350,18 +352,18 @@
       time = timer_array[quiz_id-1];
 
       // start timer only if time is less than or equal to 15
-      if (time <= 15) {
+      if (time <= total_time_per_quiz) {
         intervalID = setInterval(() => {
           time++;
           document.getElementById('timer').innerHTML = time;
 
           // stop timer and go to next question when time is up
-          if (time >= 15) {
+          if (time >= total_time_per_quiz) {
             timer_array[quiz_id-1] = time;
             clearInterval(intervalID);
             document.getElementById('next').click();
           }
-        }, 1000);
+        }, 500);
       }
       else {
         document.getElementById('next').click();
@@ -385,13 +387,9 @@
   }
 
   function quiz_result() {
-    // $("#exit_quiz").show();
-    // $("#preview-status").hide();
-
-    // var correct_questions=0;
-    // var attempted_questions=0;
     var count=0;
     var blank=0;
+    var q_ids = Array();
     for (let i = 0; i < total_quiz; i++){
       const questionObj = JSON.parse(localStorage.getItem("item"+(i+1)));
 
@@ -403,12 +401,18 @@
         blank++;
       }
     }
-    var time_taken = timer_array.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    time_taken = calculate_time();
+    // var time_taken = timer_array.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     
     console.log(blank);
     attempted_questions = total_quiz - blank; 
-    // let return_array =[correct_questions, attempted_questions, total_quiz];
 
+    for (var i = 1; i <= total_quiz ; i++){
+      const questionObj = JSON.parse(localStorage.getItem("item"+i));
+      q_ids.push(questionObj.id);
+    }
+    console.log("question ids to be sent to db: "+q_ids +"answers selected: "+answers_selected);
+    // console.log(answers_selected);
     $.ajax({
       url: "<?php  echo base_url(); ?>Quiz_controller/save_result",
       type: "POST",
@@ -417,11 +421,14 @@
         total_quiz,
         attempted_questions: attempted_questions,
         correct_questions: correct_questions,
-        time_taken: time_taken
+        time_taken: time_taken,
+        q_ids,
+        answers_selected,
+        timer_array
       },
       success: function(data){
+        console.log("Quiz result saved to database");
         console.log(data);
-        show_result();
          
       }
     });
@@ -436,12 +443,12 @@
 		$("#result_table").show();
     var sessionData = <?php echo json_encode($this->session->userdata()); ?>;
 
-	  var newRow = "<tr><td>" + sessionData.name + "</td><td>" + sessionData.email + "</td><td>" + total_quiz + "</td><td>" + attempted_questions + "</td><td>" + correct_questions + "</td><td>" + calculate_time() + "</td></tr>";
+	  var newRow = 
+    "<tr><td>" + sessionData.name + "</td><td>" + sessionData.email + "</td><td>" + total_quiz + "</td><td>" + attempted_questions + "</td><td>" + correct_questions + "</td><td>" + time_taken + "</td></tr>";
     $("#result_table tbody").append(newRow); 
   }
 
   function calculate_time(){
-
     var start_time = "<?php echo $this->session->userdata('start_time'); ?>";
     // Get client's timezone offset in minutes
     var timezone_offset = new Date().getTimezoneOffset();
@@ -452,7 +459,7 @@
 
     // Calculate the elapsed time in seconds
     var elapsed_time = Math.floor((new Date() - adjusted_start_time) / 1000);
-    console.log(start_time, Date(), adjusted_start_time);
+
     return elapsed_time;
   }
 
@@ -463,11 +470,11 @@
       return;
     }
     time = timer_array[quiz_id-1];
-    document.getElementById('timer').innerHTML = time;
+    // document.getElementById('timer').innerHTML = time;
 
     const questionObj = JSON.parse(localStorage.getItem("item"+quiz_id));
     // console.log(questionObj);
-    document.getElementById("question-number").innerHTML= questionObj.id;
+    document.getElementById("question-number").innerHTML= questionObj.id + " out of "+ total_quiz;
 
     console.log("loading first preview");
 
@@ -483,8 +490,10 @@
         $('#option-' + (index+1)).prop('checked', true);
       }
     });
-    highlightAnswers();
+    document.getElementById('timer').innerHTML = time;
 
+    highlightAnswers();
+    submitBtn();
     return;
   }
 
@@ -503,6 +512,41 @@
       return;
     }
     load_preview();
+  }
+  function previousBtn(){
+    if(quiz_id <= 1){
+      console.log('Method to hide previous button.');
+      if(!$('#previous').hasClass('d-none'))
+      {
+        $('#previous').addClass('d-none');
+      }
+    }
+    else{
+      if($('#previous').hasClass('d-none'))
+      {
+        $('#previous').removeClass('d-none');
+      }
+    }
+
+  }
+
+  function submitBtn(){
+    if(startPreview){
+      $('#next').text('Next');
+      return;
+    }
+    else if(quiz_id > total_quiz-2){
+      // console.log(quiz_id, total_quiz);
+      console.log("show if it is  submit");
+      $('#next').text('Submit');
+      return;
+    }
+    else{
+      console.log(quiz_id, total_quiz);
+      console.log("show if it is next");
+      $('#next').text('Next');
+      return;
+    }
   }
 
   function highlightAnswers() {

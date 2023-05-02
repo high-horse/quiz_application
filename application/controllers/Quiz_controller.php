@@ -11,7 +11,7 @@ Class Quiz_controller extends CI_Controller{
     }
     
     public function index(){
-        
+
         $this->load->view('all_views/quiz_view');
     }
 
@@ -68,6 +68,9 @@ Class Quiz_controller extends CI_Controller{
         
         
         $res = $this->Quiz_model->set_result();
+        $res1 = $this->Quiz_model->save_preview($res);
+
+        var_dump($res1);
 
 
         $response['name'] = $name;

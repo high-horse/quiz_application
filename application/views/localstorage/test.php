@@ -405,11 +405,12 @@
     console.log(blank);
     attempted_questions = total_quiz - blank; 
 
-    // for (var i=0)
-
-    // const questionObj = JSON.parse(localStorage.getItem("item"+quiz_id));
-
-
+    for (var i = 1; i <= total_quiz ; i++){
+      const questionObj = JSON.parse(localStorage.getItem("item"+i));
+      q_ids.push(questionObj.id);
+    }
+    console.log("question ids to be sent to db: "+q_ids +"answers selected: "+answers_selected);
+    // console.log(answers_selected);
     $.ajax({
       url: "<?php  echo base_url(); ?>Quiz_controller/save_result",
       type: "POST",
@@ -418,7 +419,10 @@
         total_quiz,
         attempted_questions: attempted_questions,
         correct_questions: correct_questions,
-        time_taken: time_taken
+        time_taken: time_taken,
+        q_ids,
+        answers_selected,
+        timer_array
       },
       success: function(data){
         console.log("Quiz result saved to database");
@@ -464,7 +468,7 @@
       return;
     }
     time = timer_array[quiz_id-1];
-    document.getElementById('timer').innerHTML = time;
+    // document.getElementById('timer').innerHTML = time;
 
     const questionObj = JSON.parse(localStorage.getItem("item"+quiz_id));
     // console.log(questionObj);
@@ -484,6 +488,8 @@
         $('#option-' + (index+1)).prop('checked', true);
       }
     });
+    document.getElementById('timer').innerHTML = time;
+
     highlightAnswers();
     submitBtn();
     return;

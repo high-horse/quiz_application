@@ -16,6 +16,14 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
 
+    <style>
+    @media (min-width: 576px){
+      .modal-dialog {
+        max-width: 800px;
+        margin: 1.75rem auto;
+      }
+    }
+  </style>
 
     <title>Admin Dashboard</title>
 </head>
@@ -52,80 +60,40 @@
             </table>
 
         </div>
-      </div>`
-
-
-      <!-- Button trigger modal -->
-
+      </div>
 
       <!-- Modal -->
-    <div class="modal fade" id="preview-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Previewing...</h5>
-          </div>
-          <div class="modal-body">
-            <form action="" id = "quiz_form">
-              <div class="question bg-white p-3 border-bottom">
-                <div class="d-flex flex-row justify-content-between align-items-center mcq">
-                  <div  id="question" class="d-flex flex-row align-items-center space-between w-100">
-                    <label for="question-number w-100">Q.No:</label> 
-                    <span id="question-number" name="question-number" class="form-control outline-none  border-0" min="1" max="10" value=""></span>
-                    <span id="">Time-></span>
-                    <span id="timer"></span> 
-                  </div>
+      <div class="modal fade" id="preview-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel"> </h5>
+            </div>
+            <div class="modal-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col-3">Question</th>
+                    <th scope="col-3">Answer</th>
+                    <th scope="col-3">Selected Answer</th>
+                    <th scope="col-3">Time Taken</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <tbody id="tbody-preview">
+                </tbody>
+              </table>
+            
 
-                </div>
-              </div>
-              <div class="question bg-white p-3 border-bottom">
 
-                <div class="d-flex flex-row align-items-center question-title">
-                  <h3 class="text-danger">Q.</h3>
-                  <h5 class="mt-1 ml-2" id="question-text"></h5>
-                </div>
-
-                <div class="ans ml-2">
-                  <label class="radio">
-                    <input type="radio" name="option" value="" id="option-1">
-                    <span id="option-1-text" class=""></span>
-                  </label>
-                </div>
-                <div class="ans ml-2">
-                  <label class="radio">
-                    <input type="radio" name="option" value="" id="option-2">
-                    <span id="option-2-text" class=""></span>
-                  </label>
-                </div>
-
-                <div class="ans ml-2">
-                  <label class="radio">
-                    <input type="radio" name="option" value="" id="option-3">
-                    <span id="option-3-text" class=""></span>
-                  </label>
-                </div>
-
-                <div class="ans ml-2">
-                  <label class="radio">
-                    <input type="radio" name="option" value="" id="option-4">
-                    <span id="option-4-text" class=""></span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="d-flex flex-row justify-content-between align-items-center p-3 bg-white">
-                <button id="previous" name="previous" class="btn btn-primary d-flex align-items-center btn-danger d-none" type="button">
-                  <i class="fa fa-angle-left mt-1 mr-1"></i>&nbsp;Previous
-                </button>
-                <button id="next" name="next" class="btn btn-primary border-success align-items-center btn-success" type="button">
-                  Next<i class="fa fa-angle-right ml-2"></i>
-                </button>
-              </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id = "close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
           </div>
         </div>
       </div>
-    </div>
     
   </div>
 </div>
@@ -148,6 +116,7 @@
       dataType: "json",
       success: function(data){
         console.log("from success");
+        console.log(data);
 
         var i = 1;
             for (var key in data) {
@@ -160,7 +129,8 @@
                     tbody += "<td>" + data[key]['correct_question'] + "</td>";
                     tbody += "<td>" + data[key]['time_taken'] + "</td>";
                     tbody += `<td> 
-                      <button  href="#" class="btn btn-primary btn-sm" id="preview" value="${data[key]['sn']}">Preview</button >
+                      <button  href="#" class="preview btn btn-primary btn-sm" 
+                      onclick = 'get_sn(${data[key]['sn']})'>Preview</button >
                     </td>`;
 
                 }
@@ -197,10 +167,55 @@
 
       });
     }  
-    $(document).on("click", "#preview", function(e){
-      e.preventDefault();
+
+    function get_sn(id){
+      // return id;
       $('#preview-modal').modal('show');
+      // var buttonValue = $('.preview').val();
+      load_preview(id);
+
+    }
+
+    $(document).on("click", "#close", function(e){
+      e.preventDefault();
+      $('#preview-modal').modal('hide');
+
+
     });
+
+    function load_preview(id){
+      console.log(id);
+      $.ajax({
+        url : "<?php echo base_url(); ?>Admin_controller/preview",
+        type: "POST",
+        dataType: "json",
+        data: { id },
+
+        success: function(data){
+          console.log(data);
+          // select the modal title element by its ID and update the text
+          $("#exampleModalLabel").text("Name: "+data['name']);
+
+          var tbody ="";
+            console.log(data);
+
+            for (var i=0; i<10; i++) {
+                    tbody += "<tr>";
+                    tbody += "<td class='col-6'>" + data['question'][i] + "</td>";
+                    tbody += "<td class='col-2'>" + data['answer'][i] + "</td>";
+                    tbody += "<td class='col-2'>" + data['selected_answer'][i] + "</td>";
+                    tbody += "<td class='col-2'>" + data['time'][i] + "</td>";
+
+                    tbody += "</tr>";
+                    
+                };
+                $("#tbody-preview").html(tbody);
+         
+          }   
+        
+   
+      });
+    }
 
 
 </script>

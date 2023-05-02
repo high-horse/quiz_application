@@ -34,5 +34,28 @@ class Admin_model extends CI_Model{
         return $query->result_array();
     }
 
+    public function preview($test_id){
+        // $test_id = 1;
+        // $stmt = $pdo->prepare("SELECT st.name, ques.question, opt.option, pre.ans, pre.time 
+        //                     FROM preview AS pre 
+        //                     JOIN students AS st ON pre.test_id = st.sn 
+        //                     JOIN quiz_question AS ques ON pre.q_id = ques.id 
+        //                     JOIN quiz_option AS opt ON ques.id = opt.q_id 
+        //                     WHERE opt.answer = 1 AND pre.test_id = ?");
+        // $stmt->execute([$test_id]);
+        // $results = $stmt->fetchAll();
+        // return $results->result();
+    
+
+    $this->db->select('st.name, ques.question, opt.option, pre.ans, pre.time');
+    $this->db->from('preview AS pre');
+    $this->db->join('students AS st', 'pre.test_id = st.sn');
+    $this->db->join('quiz_question AS ques', 'pre.q_id = ques.id');
+    $this->db->join('quiz_option AS opt', 'ques.id = opt.q_id');
+    $this->db->where('opt.answer', 1);
+    $this->db->where('pre.test_id', $test_id);
+    $query = $this->db->get();
+    return $query->result();
+    }
 }
 ?>

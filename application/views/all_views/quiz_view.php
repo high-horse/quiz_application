@@ -37,8 +37,8 @@
             </div>
 
             <div class="container-fluid d-flex justify-content-center align-items-center ">
-            <!-- <button class="btn btn-primary btn-lg fs-3" onclick="location.href='<?php //echo base_url('Quiz_controller/play_quiz') ?>'">  -->
-            <button class="btn btn-primary btn-lg fs-3" onclick="location.href='<?php echo base_url('test/test_method') ?>'">
+            <button class="btn btn-primary btn-lg fs-3" onclick="location.href='<?php echo base_url('Quiz_controller/play_quiz') ?>'"> 
+            <!-- <button class="btn btn-primary btn-lg fs-3" onclick="location.href='<?php //echo base_url('test/test_method') ?>'"> -->
                 Start Quiz
               </button>
             </div>

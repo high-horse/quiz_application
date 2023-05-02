@@ -38,12 +38,34 @@ class Quiz_model extends CI_Model{
             'time_taken' => $this->input->post('time_taken'),
         );
         $query = $this->db->insert('students', $obj);
+        $insert_id = $this->db->insert_id();
         if($query){
-            return true;
+            return $insert_id;
         }
         else{
             return false;
         }
+    }
+
+    public function save_preview($id){
+        $q_ids = $this->input->post('q_ids'); // example array for q_ids
+        $answers = $this->input->post('answers_selected');// example array for answers
+        $time = $this->input->post('timer_array'); // example array for times
+
+        $data = array();
+        foreach ($q_ids as $index => $q_id) {
+            $data[] = array(
+                'test_id' => $id,
+                'q_id' => $q_ids[$index],
+                'ans' => $answers[$index],
+                'time' => $time[$index]
+            );
+        }
+
+        $this->db->insert_batch('preview', $data);
+        $insert_count = count($data);
+        return($insert_count);
+
     }
 }
 ?>

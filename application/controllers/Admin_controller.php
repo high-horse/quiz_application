@@ -65,5 +65,48 @@ class Admin_controller extends CI_Controller{
         $this->session->unset_userdata('username');
         $this->index();
     }
+
+    public function preview(){
+        header("Access-Control-Allow-Origin: *");
+
+        $ajax_id= $this->input->post('id');
+        if($ajax_id != NULL){
+
+            // $data['status'] = "success";
+            // echo json_encode($data);
+              
+            $question =[];
+            $option =[];
+            $answer = [];
+            $time = [];
+            $selected_answer = [];
+
+            $this->load->model('Admin_model');
+            $quiz_results = $this->Admin_model->preview($ajax_id);
+            // var_dump($quiz_results);
+    
+            $name = $quiz_results[0]->name;
+            foreach ($quiz_results as $index){
+                $question[] = $index->question;
+                $answer[] = $index->option;
+                $selected_answer[] = $index->ans;
+                $time[] = $index->time;
+            }
+            $response = array(
+                'name'=> $name,
+                'question'=> $question,
+                'selected_answer'=> $selected_answer,
+                'answer'=> $answer,
+                'time'=> $time
+            );
+            echo json_encode($response);
+
+        }
+        else{
+            $str = "Goodbye world";
+            var_dump($str);
+        }
+    }
+    
 }
 ?>
