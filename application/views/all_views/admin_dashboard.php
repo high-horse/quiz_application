@@ -74,7 +74,7 @@
                 <thead>
                   <tr>
                     <th scope="col-3">Question</th>
-                    <th scope="col-3">Answer</th>
+                    <th scope="col-3">Correct Answer</th>
                     <th scope="col-3">Selected Answer</th>
                     <th scope="col-3">Time Taken</th>
                   </tr>
@@ -198,8 +198,10 @@
 
           var tbody ="";
             console.log(data);
+            var long = data['question'].length;
+            console.log();
 
-            for (var i=0; i<10; i++) {
+            for (var i=0; i<long; i++) {
                     tbody += "<tr>";
                     tbody += "<td class='col-6'>" + data['question'][i] + "</td>";
                     tbody += "<td class='col-2'>" + data['answer'][i] + "</td>";
@@ -209,8 +211,7 @@
                     tbody += "</tr>";
                     
                 };
-                $("#tbody-preview").html(tbody);
-         
+                $("#tbody-preview").html(tbody); 
           }   
         
    

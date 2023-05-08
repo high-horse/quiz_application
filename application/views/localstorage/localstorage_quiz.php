@@ -31,7 +31,7 @@
         .incorrect { color: red; 
           font-weight: bold;}
     </style>
-    <title>TESTING LOCALSTORAGE</title>
+    <title>Pllaying Game</title>
 </head>
 <body style="background-color: #800080;">
 
@@ -45,11 +45,12 @@
           <div class="d-flex flex-row justify-content-between align-items-center mcq">
 
 
-            <div  id="question" class="d-flex flex-row align-items-center space-between w-100">
+            <div  id="question" class="d-inline-flex flex-row align-items-center space-between w-100">
               <label for="question-number w-100">Q.No:</label> 
               <!-- <input  id="question-number" name="question-number" class="form-control outline-none  border-0" min="1" max="10" value=""> -->
               <span id="question-number" name="question-number" class="form-control outline-none  border-0" min="1" max="10" value=""></span>
-              <span id="">Time-></span>
+              <!-- <span id="" >Time_Taken-></span> -->
+              <img src="https://st4.depositphotos.com/1008851/20841/v/600/depositphotos_208411160-stock-illustration-sundial-white-with-windrose.jpg" width="30px" alt="">
               <span id="timer"></span>
             
             </div>
@@ -130,14 +131,16 @@
               <th scope="col">Total Question</th>
               <th scope="col">Attempted Questions </th>
               <th scope="col">Correct Questions </th>
-              <th scope="col">Time Taken </th>
+              <th scope="col">Time Taken (sec)</th>
             </tr>
           </thead>
           <tbody>
 
           </tbody>
-           <div>
-            <button type="button" id="exit_quiz" class="btn btn-danger" data-dismiss="modal" onclick="window.location.href='<?php echo base_url('user_controller/logout'); ?>'">Log Out</button>
+           <div class="d-flex justify-content-between">
+           <button class="btn btn-success" type="button" id="preview-button" data-dismiss="modal" onclick="preview()">Preview</button>
+
+            <button type="button" id="exit_quiz" class="btn btn-danger float-right" data-dismiss="modal" onclick="window.location.href='<?php echo base_url('user_controller/logout'); ?>'">Log Out</button>
           </div>
         </table>
 
@@ -150,12 +153,15 @@
   
   $("#exit_quiz").hide();
   $("#preview-status").hide();
+  $("#preview-button").hide();
+
   var quiz_id = 1;
   var total_quiz = 10;
   var total_time_per_quiz = 15;
   var timer_array = new Array(10).fill(0);
   var answers_selected = Array(10);
   var question = new Array(10).fill(0);
+
   var active_status =1;
 
   var intervalID;
@@ -284,14 +290,14 @@
         id : quiz_id
         },
         success: function(data){
-      previousBtn();
+            previousBtn();
             localStorage.setItem("item"+quiz_id, JSON.stringify(data));
 
             set_timer();
             //retrive data from localstorage
             const questionObj = JSON.parse(localStorage.getItem("item"+quiz_id));
             // 
-            document.getElementById("question-number").innerHTML=  questionObj.id + " out of "+ total_quiz;
+            document.getElementById("question-number").innerHTML= "<strong >" + questionObj.id + "</strong> out of <strong>"+ total_quiz+ "</strong>";
 
             $('#question-text').html(questionObj.question);
             question[quiz_id-1] = questionObj.question;
@@ -309,11 +315,9 @@
     previousBtn();
     $('#quiz_form')[0].reset();
 
-    set_timer();
+    // set_timer();
     const questionObj = JSON.parse(localStorage.getItem("item"+quiz_id));
-    // console.log(questionObj);
-    document.getElementById("question-number").innerHTML= questionObj.id + " out of "+ total_quiz;
-    console.log("question object");
+    document.getElementById("question-number").innerHTML= "<strong>" + questionObj.id + "</strong> out of <strong>"+ total_quiz+ "</strong>";
 
     $('#question-text').html(questionObj.question);
     document.getElementById("option-1-text").innerHTML = questionObj.options[0];
@@ -327,12 +331,13 @@
         $('#option-' + (index+1)).prop('checked', true);
       }
     });
+    set_timer();
   }
 
   function backTrack() {
     console.log("Backtracking Function initiated");
     console.log("time consumed = "+timer_array[quiz_id-1]+ " by quiz id " + quiz_id);
-
+    var a = quiz_id;
     for (let i = quiz_id; i >= 1; i--) {
       console.log("For loop itiration i-" +i);
       if (timer_array[i - 1] < total_time_per_quiz) {
@@ -342,7 +347,8 @@
         return;
       }
     }
-    --quiz_id;
+    // --quiz_id;
+    quiz_id = a-1;
     document.getElementById('next').click();
     return;
   }
@@ -350,22 +356,30 @@
   function set_timer() {
     if(!startPreview){
       time = timer_array[quiz_id-1];
+      // move to next question if remaining time is exactly 15 seconds
+      if (time == total_time_per_quiz-1 || time == total_time_per_quiz || time > total_time_per_quiz ) {
+        // document.getElementById('next').click(); 
+        $("#next").click(); 
 
+        return;
+      }
       // start timer only if time is less than or equal to 15
-      if (time <= total_time_per_quiz) {
+      if (time < total_time_per_quiz) {
         intervalID = setInterval(() => {
           time++;
-          document.getElementById('timer').innerHTML = time;
+          document.getElementById('timer').innerHTML = "<strong class='text-danger'>" + time +"</strong>";
 
           // stop timer and go to next question when time is up
-          if (time >= total_time_per_quiz) {
+          if (time > total_time_per_quiz-1) {
             timer_array[quiz_id-1] = time;
-            clearInterval(intervalID);
+            // clearInterval(intervalID);
             document.getElementById('next').click();
           }
-        }, 500);
+        }, 1000);
       }
       else {
+        console.log("inside else timer function");
+
         document.getElementById('next').click();
         return;
       }
@@ -437,11 +451,14 @@
 
   function show_result(){
     // $("#exit_quiz").hide();
+    $("#preview-button").show();
     $("#exit_quiz").show();
     $("#preview-status").hide();
 	
 		$("#result_table").show();
     var sessionData = <?php echo json_encode($this->session->userdata()); ?>;
+
+    $("#result_table tbody").empty();
 
 	  var newRow = 
     "<tr><td>" + sessionData.name + "</td><td>" + sessionData.email + "</td><td>" + total_quiz + "</td><td>" + attempted_questions + "</td><td>" + correct_questions + "</td><td>" + time_taken + "</td></tr>";
@@ -474,7 +491,7 @@
 
     const questionObj = JSON.parse(localStorage.getItem("item"+quiz_id));
     // console.log(questionObj);
-    document.getElementById("question-number").innerHTML= questionObj.id + " out of "+ total_quiz;
+    document.getElementById("question-number").innerHTML="<strong>"+ questionObj.id + "</strong> out of <strong>"+ total_quiz  + "</strong>";
 
     console.log("loading first preview");
 
@@ -490,7 +507,7 @@
         $('#option-' + (index+1)).prop('checked', true);
       }
     });
-    document.getElementById('timer').innerHTML = time;
+    document.getElementById('timer').innerHTML = "<strong>"+time+ "</strong>";
 
     highlightAnswers();
     submitBtn();
@@ -562,6 +579,12 @@
     } else {
       $('span:contains("' + selected + '")').addClass('incorrect');
       $('span:contains("' + correct + '")').addClass('correct');
+
+      $('input[name="option"]').each(function() {
+        if($(this).siblings('span').text() != selected) {
+          $(this).prop('disabled', true);
+        }
+      });
     }
   }
 

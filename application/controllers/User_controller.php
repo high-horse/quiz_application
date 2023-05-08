@@ -6,31 +6,44 @@ Class User_controller extends CI_Controller{
         parent:: __construct();
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
-
     }
     
     public function index(){
-        $this->load->view('all_views/user_view');
+        if($this->session->userdata('name') == ""){
+            $this->load->view('all_views/user_view');
+        }
+        else{
+            redirect('Quiz_controller/index');
+        }
     }
 
 
 
     public function signin(){
-
-        $this->form_validation->set_rules('name', 'Username', 'required');
-        $this->form_validation->set_rules('email', 'Email', 'required');
-        if ($this->form_validation->run() == FALSE)
-        {
-                $this->load->view('all_views/user_view');
+        if($this->session->userdata('name') == ""){
+            $this->form_validation->set_rules('name', 'Username', 'required');
+            $this->form_validation->set_rules(
+                'email', 'Email',
+                'required|is_unique[students.email]',
+                array(
+                        'required'      => 'You have not provided %s.',
+                        'is_unique'     => 'This %s already exists.'
+                )
+            );
+    
+            if ($this->form_validation->run() == FALSE)
+            {
+                $this->index();
+            }
+            else
+            {
+                $this->session->set_userdata('name', $this->input->post('name'));
+                $this->session->set_userdata('email', $this->input->post('email'));
+                redirect('Quiz_controller/index');
+            }
         }
-        else
-        {
-            // $this->session->set_userdata('status', $this->input->post('name'));
-            $this->session->set_userdata('name', $this->input->post('name'));
-            $this->session->set_userdata('email', $this->input->post('email'));
-                // $this->load->view('Quiz_controller/index');
+        else{
             redirect('Quiz_controller/index');
-            // redirect('test/test_method');
         }
     }
 

@@ -54,14 +54,21 @@
                         <input name="name" type="name" id="name" placeholder="Full Name"
                         class="form-control form-control-lg" style="background-color: white; color: black;" />
                         <label class="form-label" for="name">Full Name</label>
+                        <span class="text-danger">
+                            <?php echo form_error('name'); ?>
+                        </span>
 
                     </div>
 
                     <div class="form-outline mb-4">
                         <input type="email" name="email" id="email" placeholder="email@mail.com" 
-                        class="form-control form-control-lg" style="background-color: white; color: black;" />
-                        <label class="form-label" for="email">Email Address</label> 
-                    
+                        class="form-control form-control-lg" style="background-color: white; color: black;" value="<?php echo set_value('email'); ?>" />
+                        <label class="form-label" for="email">Email Address</label>
+                        <br>
+                        <span class="text-danger">
+                            <?php echo form_error('email'); ?>
+                        </span>
+                        
                     </div>
 
                     <button class="btn btn-outline-dark btn-lg px-5" type="submit">Sign In</button>
