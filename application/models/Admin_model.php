@@ -31,7 +31,12 @@ class Admin_model extends CI_Model{
         // $query = $this->db->get();
         // return( $query->result());
         $query = $this->db->get('students');
-        return $query->result_array();
+        if($query->num_rows() > 0){
+            return $query->result_array();
+        }
+        else{
+            return false;
+        }
     }
 
     public function preview($test_id){
@@ -55,7 +60,12 @@ class Admin_model extends CI_Model{
     $this->db->where('opt.answer', 1);
     $this->db->where('pre.test_id', $test_id);
     $query = $this->db->get();
-    return $query->result();
+    if($query->num_rows() > 0){
+        return $query->result();
+    }
+    else{
+        return false;
+    }
     }
 }
 ?>

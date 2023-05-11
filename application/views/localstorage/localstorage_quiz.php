@@ -1,10 +1,4 @@
-<script>
-  window.addEventListener('unload', function() {
-    // alert('Are you sure??'); // Optional alert message
-    window.location.href = "http://127.0.0.1/assignment1/index.php/Quiz_controller/index";
-});
-</script>
-
+<!-- Quiz game view. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,79 +25,80 @@
         .incorrect { color: red; 
           font-weight: bold;}
     </style>
-    <title>Pllaying Game</title>
+    <title>Playing Game...</title>
 </head>
 <body style="background-color: #800080;">
 
 <div class="container mt-5">
   <div class="d-flex justify-content-center row">
     <div class="col-md-10 col-lg-10">
+      <!-- form to load question and options. -->
         <form action="" id = "quiz_form">
           <div id ="preview-status"><h3 class= "text-white">PREVIEWING</h3>  </div>
 
-        <div class="question bg-white p-3 border-bottom">
-          <div class="d-flex flex-row justify-content-between align-items-center mcq">
+          <div class="question bg-white p-3 border-bottom">
+            <div class="d-flex flex-row justify-content-between align-items-center mcq">
 
 
-            <div  id="question" class="d-inline-flex flex-row align-items-center space-between w-100">
-              <label for="question-number w-100">Q.No:</label> 
-              <!-- <input  id="question-number" name="question-number" class="form-control outline-none  border-0" min="1" max="10" value=""> -->
-              <span id="question-number" name="question-number" class="form-control outline-none  border-0" min="1" max="10" value=""></span>
-              <!-- <span id="" >Time_Taken-></span> -->
-              <img src="https://st4.depositphotos.com/1008851/20841/v/600/depositphotos_208411160-stock-illustration-sundial-white-with-windrose.jpg" width="30px" alt="">
-              <span id="timer"></span>
-            
+              <div  id="question" class="d-inline-flex flex-row align-items-center space-between w-100">
+                <label for="question-number w-100">Q.No:</label> 
+                <!-- <input  id="question-number" name="question-number" class="form-control outline-none  border-0" min="1" max="10" value=""> -->
+                <span id="question-number" name="question-number" class="form-control outline-none  border-0" min="1" max="10" value=""></span>
+                <!-- <span id="" >Time_Taken-></span> -->
+                <img src="https://st4.depositphotos.com/1008851/20841/v/600/depositphotos_208411160-stock-illustration-sundial-white-with-windrose.jpg" width="30px" alt="">
+                <span id="timer"></span>
+              
+              </div>
+              
             </div>
-            
           </div>
-        </div>
-        <div class="question bg-white p-3 border-bottom">
+          <div class="question bg-white p-3 border-bottom">
 
-          <div class="d-flex flex-row align-items-center question-title">
-            <h3 class="text-danger">Q.</h3>
-            <h5 class="mt-1 ml-2" id="question-text"></h5>
+            <div class="d-flex flex-row align-items-center question-title">
+              <h3 class="text-danger">Q.</h3>
+              <h5 class="mt-1 ml-2" id="question-text"></h5>
+            </div>
+
+            <div class="ans ml-2">
+              <label class="radio">
+                <input type="radio" name="option" value="" id="option-1">
+                <span id="option-1-text" class=""></span>
+              </label>
+            </div>
+            <div class="ans ml-2">
+              <label class="radio">
+                <input type="radio" name="option" value="" id="option-2">
+                <span id="option-2-text" class=""></span>
+              </label>
+            </div>
+
+            <div class="ans ml-2">
+              <label class="radio">
+                <input type="radio" name="option" value="" id="option-3">
+                <span id="option-3-text" class=""></span>
+              </label>
+            </div>
+
+            <div class="ans ml-2">
+              <label class="radio">
+                <input type="radio" name="option" value="" id="option-4">
+                <span id="option-4-text" class=""></span>
+              </label>
+            </div>
           </div>
 
-          <div class="ans ml-2">
-            <label class="radio">
-              <input type="radio" name="option" value="" id="option-1">
-              <span id="option-1-text" class=""></span>
-            </label>
+          <div class="d-flex flex-row justify-content-between align-items-center p-3 bg-white">
+            <button id="previous" name="previous" class="btn btn-primary d-flex align-items-center btn-danger d-none" type="button">
+              <i class="fa fa-angle-left mt-1 mr-1"></i>&nbsp;Previous
+            </button>
+            <button id="next" name="next" class="btn btn-primary border-success align-items-center btn-success" type="button">
+              Next<i class="fa fa-angle-right ml-2"></i>
+            </button>
           </div>
-          <div class="ans ml-2">
-            <label class="radio">
-              <input type="radio" name="option" value="" id="option-2">
-              <span id="option-2-text" class=""></span>
-            </label>
-          </div>
-
-          <div class="ans ml-2">
-            <label class="radio">
-              <input type="radio" name="option" value="" id="option-3">
-              <span id="option-3-text" class=""></span>
-            </label>
-          </div>
-
-          <div class="ans ml-2">
-            <label class="radio">
-              <input type="radio" name="option" value="" id="option-4">
-              <span id="option-4-text" class=""></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="d-flex flex-row justify-content-between align-items-center p-3 bg-white">
-          <button id="previous" name="previous" class="btn btn-primary d-flex align-items-center btn-danger d-none" type="button">
-            <i class="fa fa-angle-left mt-1 mr-1"></i>&nbsp;Previous
-          </button>
-          <button id="next" name="next" class="btn btn-primary border-success align-items-center btn-success" type="button">
-            Next<i class="fa fa-angle-right ml-2"></i>
-          </button>
-        </div>
         </form>
 
-        <!-- modal  -->
-        <div id ="conformation-modal" class="modal" tabindex="-1" role="dialog" data-backdrop="static"  data-keyboard="false">
+        <!-- modal to inform the colpletion of quiz  -->
+        <div id ="conformation-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static"  data-keyboard="false">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -121,7 +116,7 @@
           </div>
         </div>
 
-        <!-- table  -->
+        <!-- result table  -->
         <table id ="result_table" class="table text-white">
          
           <thead>
@@ -149,12 +144,8 @@
 </div>
 
 
-<script>
-  
-  $("#exit_quiz").hide();
-  $("#preview-status").hide();
-  $("#preview-button").hide();
 
+<script>
   var quiz_id = 1;
   var total_quiz = 10;
   var total_time_per_quiz = 15;
@@ -162,7 +153,7 @@
   var answers_selected = Array(10);
   var question = new Array(10).fill(0);
 
-  var active_status =1;
+  var active_status =1; //
 
   var intervalID;
   var time;
@@ -171,18 +162,21 @@
   var correct_questions=0;
   var attempted_questions=0;
 
-
-  
-
   $(document).ready(function() {
-    // stack_operation();
+    initiator();
     $("#result_table").hide();
     $("#quiz_form").show();
-    // // // $('#conformation-modal').modal('show');     
     set_modal_data();
-    // console.log(timer_array);
   });
 
+// Function to initiate page.
+  function initiator(){
+    $("#exit_quiz").hide();
+    $("#preview-status").hide();
+    $("#preview-button").hide();
+  }
+
+// Event listener function when next button is clicked.
   $(document).on("click", "#next", function(e) {
     e.preventDefault();
     console.log("clicked next from "+quiz_id);
@@ -247,8 +241,7 @@
     }
   });
 
-
-
+// Event listener function when previous button is clicked.
   $(document).on("click", "#previous", function(e) {
     console.log("clicked previous from "+quiz_id);
     e.preventDefault();
@@ -281,6 +274,7 @@
     }
   });
 
+// Function to ajax request database to fetch question set.
   function set_modal_data() {
     $.ajax({
         url: "<?php echo base_url(); ?>Quiz_controller/fetch_data",
@@ -300,17 +294,18 @@
             document.getElementById("question-number").innerHTML= "<strong >" + questionObj.id + "</strong> out of <strong>"+ total_quiz+ "</strong>";
 
             $('#question-text').html(questionObj.question);
-            question[quiz_id-1] = questionObj.question;
+            question[quiz_id-1] = 1;
 
             document.getElementById("option-1-text").innerHTML = questionObj.options[0];
             document.getElementById("option-2-text").innerHTML = questionObj.options[1];
             document.getElementById("option-3-text").innerHTML = questionObj.options[2];
             document.getElementById("option-4-text").innerHTML = questionObj.options[3];
-            question[quiz_id-1] = questionObj.question;
+            // question[quiz_id-1] = questionObj.question;
         }
     });
   }
 
+// Function to load previous questions and options from localstorage.
   function load_previous(){
     previousBtn();
     $('#quiz_form')[0].reset();
@@ -334,6 +329,7 @@
     set_timer();
   }
 
+// Function to trace back if there are questions with available time.
   function backTrack() {
     console.log("Backtracking Function initiated");
     console.log("time consumed = "+timer_array[quiz_id-1]+ " by quiz id " + quiz_id);
@@ -353,6 +349,7 @@
     return;
   }
 
+// Functino to set and maintain time.
   function set_timer() {
     if(!startPreview){
       time = timer_array[quiz_id-1];
@@ -386,7 +383,7 @@
     }
   }
 
-
+// Function to save clicked option.
   function save_clicked_radiobutton(){
     var selectedValue;
     var selectedOption = $("input[name='option']:checked");
@@ -400,55 +397,59 @@
     return;
   }
 
-  function quiz_result() {
-    var count=0;
-    var blank=0;
-    var q_ids = Array();
-    for (let i = 0; i < total_quiz; i++){
-      const questionObj = JSON.parse(localStorage.getItem("item"+(i+1)));
+// Function to calculate quiz result.
+function quiz_result() {
+    if (active_status == 1){
+      active_status = 0;
+      var count=0;
+      var blank=0;
+      var q_ids = Array();
+      for (let i = 0; i < total_quiz; i++){
+        const questionObj = JSON.parse(localStorage.getItem("item"+(i+1)));
 
-      if(questionObj.answer == answers_selected[i]){
-        correct_questions++;
-        count++;
+        if(questionObj.answer == answers_selected[i]){
+          correct_questions++;
+          count++;
+        }
+        else if(typeof answers_selected[i] == "undefined"){
+          blank++;
+        }
       }
-      else if(typeof answers_selected[i] == "undefined"){
-        blank++;
+      time_taken = calculate_time();
+      // var time_taken = timer_array.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      
+      console.log(blank);
+      attempted_questions = total_quiz - blank; 
+
+      for (var i = 1; i <= total_quiz ; i++){
+        const questionObj = JSON.parse(localStorage.getItem("item"+i));
+        q_ids.push(questionObj.id);
       }
+      console.log("question ids to be sent to db: "+q_ids +"answers selected: "+answers_selected);
+      // console.log(answers_selected);
+      $.ajax({
+        url: "<?php  echo base_url(); ?>Quiz_controller/save_result",
+        type: "POST",
+        dataType: "json",
+        data: {
+          total_quiz,
+          attempted_questions: attempted_questions,
+          correct_questions: correct_questions,
+          time_taken: time_taken,
+          q_ids,
+          answers_selected,
+          timer_array
+        },
+        success: function(data){
+          console.log("Quiz result saved to database");
+          console.log(data);
+          
+        }
+      }); 
     }
-    time_taken = calculate_time();
-    // var time_taken = timer_array.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    
-    console.log(blank);
-    attempted_questions = total_quiz - blank; 
-
-    for (var i = 1; i <= total_quiz ; i++){
-      const questionObj = JSON.parse(localStorage.getItem("item"+i));
-      q_ids.push(questionObj.id);
-    }
-    console.log("question ids to be sent to db: "+q_ids +"answers selected: "+answers_selected);
-    // console.log(answers_selected);
-    $.ajax({
-      url: "<?php  echo base_url(); ?>Quiz_controller/save_result",
-      type: "POST",
-      dataType: "json",
-      data: {
-        total_quiz,
-        attempted_questions: attempted_questions,
-        correct_questions: correct_questions,
-        time_taken: time_taken,
-        q_ids,
-        answers_selected,
-        timer_array
-      },
-      success: function(data){
-        console.log("Quiz result saved to database");
-        console.log(data);
-         
-      }
-    });
-
   }
 
+  // function to show quiz result.
   function show_result(){
     // $("#exit_quiz").hide();
     $("#preview-button").show();
@@ -465,6 +466,8 @@
     $("#result_table tbody").append(newRow); 
   }
 
+
+  // Function to calculate time taken since the start of quiz to submit button.
   function calculate_time(){
     var start_time = "<?php echo $this->session->userdata('start_time'); ?>";
     // Get client's timezone offset in minutes
@@ -477,13 +480,20 @@
     // Calculate the elapsed time in seconds
     var elapsed_time = Math.floor((new Date() - adjusted_start_time) / 1000);
 
-    return elapsed_time;
+    if (elapsed_time < 59) {
+      return elapsed_time + " sec";
+    }
+    else {
+      return Math.floor(elapsed_time / 60) + " min, " + elapsed_time % 60 + " sec";
+    }
   }
 
+// Function to load question and options from localstorage to preview.
   function load_preview(){
     previousBtn();
     $('#quiz_form')[0].reset();
     if(quiz_id > total_quiz){
+      show_result();
       return;
     }
     time = timer_array[quiz_id-1];
@@ -514,8 +524,11 @@
     return;
   }
 
+// Function to innitiate preview.
   function preview(){
+    $('#preview-button').hide();
     $("#quiz_form").show();
+    $("#result_table").hide();
     startPreview = true;
     quiz_id = 1;
     console.log(quiz_id);
@@ -530,6 +543,8 @@
     }
     load_preview();
   }
+
+// Function to show or hide previeous button.
   function previousBtn(){
     if(quiz_id <= 1){
       console.log('Method to hide previous button.');
@@ -547,6 +562,7 @@
 
   }
 
+// Function to show text on button either it is next button or submit button.
   function submitBtn(){
     if(startPreview){
       $('#next').text('Next');
@@ -566,6 +582,7 @@
     }
   }
 
+// Function to highlight answer during preview.
   function highlightAnswers() {
     $('input[type=radio]').next('span').removeClass('correct incorrect');
     // $('input[type=radio]').next('span').removeClass('incorrect');
@@ -588,6 +605,20 @@
     }
   }
 
+</script>
+
+<!-- if user reloads the tab or browser -->
+<script>
+  window.addEventListener('unload', function() {
+    if(active_status == 1){
+    // alert(startPreview); // Optional alert message
+    window.location.href = "http://127.0.0.1/assignment1/index.php/Quiz_controller/index";
+    }
+    else if (active_status == 0){
+    // alert('You will be logged out.'); // Optional alert message
+    window.location.href='<?php echo base_url('user_controller/logout'); ?>'
+    }
+});
 </script>
 
 </body>

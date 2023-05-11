@@ -24,8 +24,12 @@ class Quiz_model extends CI_Model{
         $this->db->where('t1.id', $id);
         $query = $this->db->get();
         $result = $query->result();
-        return $result;
-
+        if($query->num_rows() > 0){
+            return $result;
+        }
+        else{
+            return false;
+        }
     }
 
     public function set_result(){
@@ -39,7 +43,7 @@ class Quiz_model extends CI_Model{
         );
         $query = $this->db->insert('students', $obj);
         $insert_id = $this->db->insert_id();
-        if($query){
+        if($insert_id > 0){
             return $insert_id;
         }
         else{
@@ -64,8 +68,12 @@ class Quiz_model extends CI_Model{
 
         $this->db->insert_batch('preview', $data);
         $insert_count = count($data);
-        return($insert_count);
-
+        if($insert_count > 0){
+            return($insert_count);
+        }
+        else{
+            return false;
+        }
     }
 }
 ?>

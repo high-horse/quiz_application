@@ -11,7 +11,6 @@ Class Quiz_controller extends CI_Controller{
     }
     
     public function index(){
-
         $this->load->view('all_views/quiz_view');
     }
 
@@ -21,6 +20,7 @@ Class Quiz_controller extends CI_Controller{
         $this->load->view('localstorage/localstorage_quiz');
     }
 
+    // function to fetch question id, question, options and answer to send it to view
     public function fetch_data(){
         header("Access-Control-Allow-Origin: *");
         
@@ -61,6 +61,7 @@ Class Quiz_controller extends CI_Controller{
         }
     }
 
+    // Function to set data to database
     public function save_result(){
         header("Access-Control-Allow-Origin: *");
         $name = $this->session->userdata('name');

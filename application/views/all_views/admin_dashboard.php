@@ -16,6 +16,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
 
+  <!-- datatable cdn  -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
     <style>
     @media (min-width: 576px){
       .modal-dialog {
@@ -24,6 +28,7 @@
       }
     }
   </style>
+
 
     <title>Admin Dashboard</title>
 </head>
@@ -44,12 +49,12 @@
           <table class="table table-striped ">
             <thead>
                 <tr>
-                <th scope="col">SN</th>
+                <th scope="col">ID</th>
                 <th scope="col">Username</th>
                 <th scope="col">Email</th>
                 <th scope="col">Total Questions</th>
-                <th scope="col">Correct Questions</th>
                 <th scope="col">Attempted Questions</th>
+                <th scope="col">Correct Questions</th>
                 <th scope="col">Time Taken (sec)</th>
                 <th scope="col">Preview</th>
                 </tr>
@@ -73,6 +78,7 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
+                    <th scope="col-3">SN</th>
                     <th scope="col-3">Question</th>
                     <th scope="col-3">Correct Answer</th>
                     <th scope="col-3">Selected Answer</th>
@@ -101,86 +107,80 @@
 
 
 <script>
-
+  var $j = jQuery.noConflict();
   $(document).ready(function(){
     $('#preview-modal').modal('hide');
     // $('.preview-modal').hide();
     fetch();
   });
 
-  function fetch(){
-    console.log("fetch finction");
-    $.ajax({
-      url: "<?php echo base_url(); ?>admin_controller/fetch_all_data",
-      type: "POST",
-      dataType: "json",
-      success: function(data){
-        console.log("from success");
-        console.log(data);
 
-        var i = 1;
-            for (var key in data) {
-                    tbody += "<tr>";
-                    tbody += "<td>" + i++ + "</td>";
-                    tbody += "<td>" + data[key]['name'] + "</td>";
-                    tbody += "<td>" + data[key]['email'] + "</td>";
-                    tbody += "<td>" + data[key]['total_question'] + "</td>";
-                    tbody += "<td>" + data[key]['attempted_question'] + "</td>";
-                    tbody += "<td>" + data[key]['correct_question'] + "</td>";
-                    tbody += "<td>" + data[key]['time_taken'] + "</td>";
-                    tbody += `<td> 
-                      <button  href="#" class="preview btn btn-primary btn-sm" 
-                      onclick = 'get_sn(${data[key]['sn']})'>Preview</button >
-                    </td>`;
-
-                }
-
-                $("#tbody").html(tbody);
-
+   function fetch() {
+    $j('.table-striped').DataTable({
+        "ajax": {
+            "url": "<?php echo base_url(); ?>admin_controller/fetch_all_data",
+            "type": "POST",
+            "dataType": "json",
+            "dataSrc": ""
         },
-        error: function(xhr, status, error){
-          console.log("from error");
-          console.log(error);
-          var data = JSON.parse(xhr.responseText.replace("`", ""));
-          console.log(data);
+        "columns": [
+            {"data": "sn"},
+            {"data": "name"},
+            {"data": "email"},
+            {"data": "total_question"},
+            {"data": "attempted_question"},
+            {"data": "correct_question"},
+            {"data": "time_taken"},
+            {"render": function (data, type, row) {
+                return '<button href="#" class="preview btn btn-primary btn-sm" onclick="get_sn(' + row.sn + ')">Preview</button>';
+            }}
+        ]
+    });
+}
 
-          var tbody ="";
-            // console.log(data);
+  // function fetch(){
+  //   console.log("fetch finction");
+  //   $.ajax({
+  //     url: "<?php echo base_url(); ?>admin_controller/fetch_all_data",
+  //     type: "POST",
+  //     dataType: "json",
+  //     success: function(data){
+  //       console.log("from success");
+  //       console.log(data);
 
-            var i = 1;
-            for (var key in data) {
-                    tbody += "<tr>";
-                    tbody += "<td>" + i++ + "</td>";
-                    tbody += "<td>" + data[key]['name'] + "</td>";
-                    tbody += "<td>" + data[key]['email'] + "</td>";
-                    tbody += "<td>" + data[key]['total_question'] + "</td>";
-                    tbody += "<td>" + data[key]['attempted_question'] + "</td>";
-                    tbody += "<td>" + data[key]['correct_question'] + "</td>";
-                    tbody += "<td>" + data[key]['time_taken'] + "</td>";
-                    tbody += `<td> 
-                      <button  href="#" class="btn btn-primary btn-sm" id="preview" value="${data[key]['sn']}">Preview</button >
-                    </td>`;
-                }
-                $("#tbody").html(tbody);
-         
-          }
+  //       var i = 1;
+  //           for (var key in data) {
+  //                   tbody += "<tr>";
+  //                   tbody += "<td>" + i++ + "</td>";
+  //                   tbody += "<td>" + data[key]['name'] + "</td>";
+  //                   tbody += "<td>" + data[key]['email'] + "</td>";
+  //                   tbody += "<td>" + data[key]['total_question'] + "</td>";
+  //                   tbody += "<td>" + data[key]['attempted_question'] + "</td>";
+  //                   tbody += "<td>" + data[key]['correct_question'] + "</td>";
+  //                   tbody += "<td>" + data[key]['time_taken'] + "</td>";
+  //                   tbody += `<td> 
+  //                     <button  href="#" class="preview btn btn-primary btn-sm" 
+  //                     onclick = 'get_sn(${data[key]['sn']})'>Preview</button >
+  //                   </td>`;
 
-      });
-    }  
+  //               }
+
+  //               $("#tbody").html(tbody);
+
+  //       }
+  //     });
+  //   }  
 
     function get_sn(id){
       // return id;
       $('#preview-modal').modal('show');
       // var buttonValue = $('.preview').val();
       load_preview(id);
-
     }
 
     $(document).on("click", "#close", function(e){
       e.preventDefault();
       $('#preview-modal').modal('hide');
-
-
     });
 
     function load_preview(id){
@@ -192,23 +192,26 @@
         data: { id },
 
         success: function(data){
-          console.log(data);
+          // console.log(data);
           // select the modal title element by its ID and update the text
           $("#exampleModalLabel").text("Name: "+data['name']);
 
           var tbody ="";
             console.log(data);
             var long = data['question'].length;
-            console.log();
+            // console.log();
 
             for (var i=0; i<long; i++) {
                     tbody += "<tr>";
+                    tbody += "<td>" + parseInt(i+1) + "</td>";
                     tbody += "<td class='col-6'>" + data['question'][i] + "</td>";
                     tbody += "<td class='col-2'>" + data['answer'][i] + "</td>";
                     tbody += "<td class='col-2'>" + data['selected_answer'][i] + "</td>";
                     tbody += "<td class='col-2'>" + data['time'][i] + "</td>";
 
-                    tbody += "</tr>";
+                    var highlightedRow = highlightRow(data['answer'][i], data['selected_answer'][i]);
+                    tbody = tbody.replace("<tr>", '<tr style="' + highlightedRow + '">');
+
                     
                 };
                 $("#tbody-preview").html(tbody); 
@@ -217,6 +220,22 @@
    
       });
     }
+
+
+    function highlightRow(correctAns, selectedAns) {
+    console.log("Correct answer and selected answer are: ", correctAns, selectedAns);
+    if (correctAns === selectedAns) {
+      console.log("inside highlight row 1");
+      return "background-color: lightgreen";
+    } 
+    else if(selectedAns == "") {
+      return "background-color: #E5E4E2";
+    }
+    else {
+      console.log("inside highlight row 2");
+      return "background-color: #FF7377";
+    }
+  }
 
 
 </script>
