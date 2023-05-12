@@ -593,6 +593,12 @@ function quiz_result() {
 
     if (selected == correct) {
       $('span:contains("' + selected + '")').addClass('correct');
+      
+      $('input[name="option"]').each(function() {
+        if($(this).siblings('span').text() != selected) {
+          $(this).prop('disabled', true);
+        }
+      });
     } else {
       $('span:contains("' + selected + '")').addClass('incorrect');
       $('span:contains("' + correct + '")').addClass('correct');

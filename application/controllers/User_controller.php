@@ -53,6 +53,7 @@ Class User_controller extends CI_Controller{
             $_SESSION['email']
         );
         session_destroy();
+        $this->output->set_output('<script>window.localStorage.clear();</script>');
         $this->index();
     }
 }
