@@ -56,7 +56,7 @@ Class Quiz_controller extends CI_Controller{
         }
         else{
             $response['status'] = "ERROR";
-            $response['message'] = "EMPTY IT WAS SENT";
+            $response['message'] = "EMPTY ID WAS SENT";
             echo json_encode($response);
         }
     }
@@ -71,13 +71,17 @@ Class Quiz_controller extends CI_Controller{
         $res = $this->Quiz_model->set_result();
         $res1 = $this->Quiz_model->save_preview($res);
 
-        var_dump($res1);
-
-
-        $response['name'] = $name;
-        $response['email'] = $email;
-        $response['message'] = "successfuly added data";
-        echo json_encode($response);
+        // var_dump($res1);
+        if($res1){
+            $response['status'] = "success";
+            $response['message'] = "successfuly added data";
+            echo json_encode($response);
+        }
+        else{
+            $response['status'] = "error";
+            $response['message'] = "error adding data";
+            echo json_encode($response);
+        }
     }
 
 

@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="../resources/animation.css">
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 
     <!-- <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"> -->
@@ -24,26 +27,37 @@
           font-weight: bold;}
         .incorrect { color: red; 
           font-weight: bold;}
+          .custom-font-size {
+          font-size: 20px;}
     </style>
     <title>Playing Game...</title>
 </head>
 <body style="background-color: #800080;">
+<div class='light x1'></div>
+<div class='light x2'></div>
+<div class='light x3'></div>
+<div class='light x4'></div>
+<div class='light x5'></div>
+<div class='light x6'></div>
+<div class='light x7'></div>
+<div class='light x8'></div>
+<div class='light x9'></div>
 
-<div class="container mt-5">
+<div class="container mt-5" >
   <div class="d-flex justify-content-center row">
     <div class="col-md-10 col-lg-10">
       <!-- form to load question and options. -->
-        <form action="" id = "quiz_form">
+        <form action="" id = "quiz_form" style="background-color: #800080;">
           <div id ="preview-status"><h3 class= "text-white">PREVIEWING</h3>  </div>
 
           <div class="question bg-white p-3 border-bottom">
-            <div class="d-flex flex-row justify-content-between align-items-center mcq">
+            <div class="d-flex flex-row justify-content-between align-items-center mcq custom-font-size">
 
 
               <div  id="question" class="d-inline-flex flex-row align-items-center space-between w-100">
-                <label for="question-number w-100">Q.No:</label> 
+                <label for="question-number w-100" class="custom-font-size">Q.No:</label> 
                 <!-- <input  id="question-number" name="question-number" class="form-control outline-none  border-0" min="1" max="10" value=""> -->
-                <span id="question-number" name="question-number" class="form-control outline-none  border-0" min="1" max="10" value=""></span>
+                <span id="question-number" name="question-number" class="form-control outline-none  border-0 custom-font-size" min="1" max="10" value=""></span>
                 <!-- <span id="" >Time_Taken-></span> -->
                 <img src="https://st4.depositphotos.com/1008851/20841/v/600/depositphotos_208411160-stock-illustration-sundial-white-with-windrose.jpg" width="30px" alt="">
                 <span id="timer"></span>
@@ -56,33 +70,33 @@
 
             <div class="d-flex flex-row align-items-center question-title">
               <h3 class="text-danger">Q.</h3>
-              <h5 class="mt-1 ml-2" id="question-text"></h5>
+              <h4 class="mt-1 ml-2" id="question-text"></h4>
             </div>
 
             <div class="ans ml-2">
               <label class="radio">
                 <input type="radio" name="option" value="" id="option-1">
-                <span id="option-1-text" class=""></span>
+                <span id="option-1-text" class="custom-font-size"></span>
               </label>
             </div>
             <div class="ans ml-2">
               <label class="radio">
                 <input type="radio" name="option" value="" id="option-2">
-                <span id="option-2-text" class=""></span>
+                <span id="option-2-text" class="custom-font-size"></span>
               </label>
             </div>
 
             <div class="ans ml-2">
               <label class="radio">
                 <input type="radio" name="option" value="" id="option-3">
-                <span id="option-3-text" class=""></span>
+                <span id="option-3-text" class="custom-font-size"></span>
               </label>
             </div>
 
             <div class="ans ml-2">
               <label class="radio">
                 <input type="radio" name="option" value="" id="option-4">
-                <span id="option-4-text" class=""></span>
+                <span id="option-4-text" class="custom-font-size"></span>
               </label>
             </div>
           </div>
@@ -117,8 +131,8 @@
         </div>
 
         <!-- result table  -->
+        
         <table id ="result_table" class="table text-white">
-         
           <thead>
             <tr>
               <th scope="col">Name</th>

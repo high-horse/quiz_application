@@ -16,9 +16,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
 
-  <!-- datatable cdn  -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+      <!-- datatable cdn  -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
     <style>
     @media (min-width: 576px){
@@ -27,10 +27,15 @@
         margin: 1.75rem auto;
       }
     }
+    tr th{
+      padding: 1rem .25rem !important;
+      margin: 0 !important;
+    }
   </style>
 
 
     <title>Admin Dashboard</title>
+
 </head>
 <body style="background-color: #800080;">
 
@@ -40,22 +45,22 @@
     <button type="button" id="exit_quiz" class="btn btn-danger" data-dismiss="modal" onclick="window.location.href='<?php echo base_url('admin_controller/logout'); ?>'">Log Out</button>
 
       <div class="card">
-        <div class="card-header">
+        <div class="card-header bg-white">
           <legend class="text-center"><b>Admin Dashboard</b></legend>
         </div>
 
         <div class="card-body table-responsive-sm table-responsive-md table-responsive-lg">
           <!-- Your content here -->
-          <table class="table table-striped ">
-            <thead>
+          <table class="table table-hover">
+            <thead class="">
                 <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Username</th>
                 <th scope="col">Email</th>
                 <th scope="col">Total Questions</th>
-                <th scope="col">Attempted Questions</th>
+                <th scope="col" style="width: 0% !important">Attempted Questions</th>
                 <th scope="col">Correct Questions</th>
-                <th scope="col">Time Taken (sec)</th>
+                <th scope="col">Time Taken</th>
                 <th scope="col">Preview</th>
                 </tr>
             </thead>
@@ -116,7 +121,7 @@
 
 
    function fetch() {
-    $j('.table-striped').DataTable({
+    $j('.table-hover').DataTable({
         "ajax": {
             "url": "<?php echo base_url(); ?>admin_controller/fetch_all_data",
             "type": "POST",

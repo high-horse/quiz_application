@@ -1,3 +1,4 @@
+<!-- Testing Localstorage. -->
 <script>
   window.addEventListener('unload', function() {
     // alert('Are you sure??'); // Optional alert message

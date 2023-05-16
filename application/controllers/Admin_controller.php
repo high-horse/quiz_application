@@ -37,8 +37,8 @@ class Admin_controller extends CI_Controller{
             }
             else {
                 $this->session->set_flashdata('error_msg', 'Invalid username or password');
-                // redirect('admin_controller/index');
-                $this->index();
+                redirect('admin_controller/index');
+                // $this->index();
             }  
 
         }
@@ -63,6 +63,7 @@ class Admin_controller extends CI_Controller{
 
     public function logout(){
         $this->session->unset_userdata('username');
+        session_destroy();
         $this->index();
     }
 
